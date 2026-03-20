@@ -10,4 +10,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface AssetRepository {
     fun getAssets(): Flow<Resource<List<Asset>>>
+    fun searchAssets(query: String): Flow<List<Asset>>
 }

@@ -5,10 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.giuldev.ecowatcher.domain.model.Asset
 import com.giuldev.ecowatcher.domain.model.Resource
 import com.giuldev.ecowatcher.domain.usecase.GetMarketAssetsUseCase
+import com.giuldev.ecowatcher.domain.usecase.SearchAssetsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -29,14 +32,19 @@ sealed class AssetState {
  */
 @HiltViewModel
 class AssetViewModel @Inject constructor(
-    private val getMarketAssetsUseCase: GetMarketAssetsUseCase
+    private val getMarketAssetsUseCase: GetMarketAssetsUseCase,
+    private val searchAssetsUseCase: SearchAssetsUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<AssetState>(AssetState.Loading)
     val state: StateFlow<AssetState> = _state.asStateFlow()
 
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
     init {
         loadAssets()
+        observeSearch()
     }
 
     /**
@@ -46,7 +54,6 @@ class AssetViewModel @Inject constructor(
         getMarketAssetsUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    // Se estiver vazio, a View deve montar Empty State
                     _state.value = AssetState.Success(result.data ?: emptyList())
                 }
                 is Resource.Error -> {
@@ -56,6 +63,36 @@ class AssetViewModel @Inject constructor(
                     _state.value = AssetState.Loading
                 }
             }
+        }.launchIn(viewModelScope)
+    }
+
+    /**
+     * Atualiza a consulta de busca.
+     */
+    fun onSearchQueryChanged(query: String) {
+        _searchQuery.value = query
+    }
+
+    /**
+     * Observa as mudanças na consulta de busca com debounce para evitar chamadas excessivas.
+     */
+    private fun observeSearch() {
+        _searchQuery
+            .debounce(500)
+            .distinctUntilChanged()
+            .onEach { query ->
+                if (query.isBlank()) {
+                    loadAssets()
+                } else if (query.length >= 2) {
+                    searchAssets(query)
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun searchAssets(query: String) {
+        searchAssetsUseCase(query).onEach { assets ->
+            _state.value = AssetState.Success(assets)
         }.launchIn(viewModelScope)
     }
 }

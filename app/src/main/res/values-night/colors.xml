@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#90CAF9</color>
+    <color name="primaryContainer">#1976D2</color>
+    
+    <color name="secondary">#B0BEC5</color>
+    <color name="secondaryContainer">#455A64</color>
+    
+    <color name="background">#121212</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="outline">#757575</color>
+    
+    <!-- Price colors -->
+    <color name="price_up">#81C784</color>
+    <color name="price_down">#E57373</color>
+</resources>

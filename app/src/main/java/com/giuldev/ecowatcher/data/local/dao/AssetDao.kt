@@ -15,6 +15,9 @@ interface AssetDao {
     @Query("SELECT * FROM assets")
     suspend fun getAllAssets(): List<AssetEntity>
 
+    @Query("SELECT * FROM assets WHERE name LIKE '%' || :query || '%' OR symbol LIKE '%' || :query || '%'")
+    suspend fun searchAssets(query: String): List<AssetEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAssets(assets: List<AssetEntity>)
 

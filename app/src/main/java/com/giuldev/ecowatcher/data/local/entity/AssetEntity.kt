@@ -14,5 +14,9 @@ data class AssetEntity(
     val name: String,
     val imageUrl: String,
     val currentPrice: Double,
-    val priceChangePercentage24h: Double
+    val priceChangePercentage24h: Double,
+    val marketCap: Double,
+    val totalVolume: Double,
+    val high24h: Double,
+    val low24h: Double
 )

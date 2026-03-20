@@ -49,4 +49,9 @@ class AssetRepositoryImpl(
             }
         }
     }
+
+    override fun searchAssets(query: String): Flow<List<Asset>> = flow {
+        val searchResults = dao.searchAssets(query)
+        emit(searchResults.toDomainList())
+    }
 }

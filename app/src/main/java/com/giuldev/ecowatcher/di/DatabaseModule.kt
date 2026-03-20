@@ -25,7 +25,8 @@ object DatabaseModule {
             context,
             EcoWatcherDatabase::class.java,
             "eco_watcher_db"
-        ).build()
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

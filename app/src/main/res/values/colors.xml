@@ -2,4 +2,21 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- EcoWatcher Original Refined Palette -->
+    <color name="primary">#1976D2</color> <!-- Blue -->
+    <color name="primaryContainer">#BBDEFB</color>
+    <color name="secondary">#455A64</color>
+    <color name="secondaryContainer">#CFD8DC</color>
+    
+    <color name="tertiary">#757575</color>
+    <color name="outline">#BDBDBD</color>
+    
+    <color name="error">#D32F2F</color>
+    <color name="background">#F5F5F5</color>
+    <color name="surface">#FFFFFF</color>
+
+    <!-- Price colors -->
+    <color name="price_up">#388E3C</color>
+    <color name="price_down">#D32F2F</color>
 </resources>

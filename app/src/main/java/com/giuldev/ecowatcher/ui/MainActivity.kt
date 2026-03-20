@@ -25,7 +25,17 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: AssetViewModel by viewModels()
-    private val assetAdapter by lazy { AssetAdapter() }
+    private val assetAdapter by lazy {
+        AssetAdapter { asset ->
+            // Clear search field as requested
+            binding.etSearch.text?.clear()
+            
+            val intent = android.content.Intent(this, DetailsActivity::class.java).apply {
+                putExtra("EXTRA_ASSET", asset)
+            }
+            startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +63,18 @@ class MainActivity : AppCompatActivity() {
         binding.btnRetry.setOnClickListener {
             viewModel.loadAssets()
         }
+
+        binding.etSearch.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.onSearchQueryChanged(s?.toString() ?: "")
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
     }
 
     private fun observeViewModel() {
         lifecycleScope.launch {
-            // Garante que a coleta de estados aconteça apenas quando a tela estiver visível (boa prática Android)
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collectLatest { state ->
                     when (state) {

@@ -1,0 +1,61 @@
+PARA AMANHA 19/03 NOVAS FEATURES DO PROJETO Ecowatcher
+
+
+Prompt de Evolução: Ecowatcher (Funcionalidades Sênior)
+Instrução Inicial: Aja como um Desenvolvedor Android Sênior. Vamos evoluir o projeto 'Ecowatcher' adicionando recursos avançados de visualização, persistência e background processing. O objetivo é demonstrar domínio de bibliotecas externas, concorrência e Pirâmide de Testes.
+
+Diretrizes de Evolução:
+
+Branching: Cada Task deve ser tratada como uma nova Feature.
+
+Clean Architecture: As novas regras de negócio (Favoritos/Alertas) devem ter seus próprios UseCases.
+
+UI/UX: Manter o padrão Material Design 3 e garantir que a interface seja responsiva.
+
+Pausas: Não gere tudo de uma vez. Aguarde minha confirmação após cada Task.
+
+🛠️ CRONOGRAMA DE EVOLUÇÃO TÉCNICA
+Task 1: Busca em Tempo Real e Detalhes do Ativo
+O que implementar:
+
+Search: No ViewModel, implementar um StateFlow que reage a consultas de texto. Use os operadores debounce(500ms), filter e distinctUntilChanged do Kotlin Flow para evitar chamadas excessivas à API.
+
+Navigation: Configurar a navegação para uma nova DetailsActivity.
+
+Details UI: Criar um layout que exiba informações expandidas (Market Cap, Volume, High/Low 24h).
+
+Tecnologias: ViewBinding, Flow Operators, Safe Args/Parcelable.
+
+Task 2: Gráficos de Variação (MPAndroidChart) e Favoritos
+O que implementar:
+
+Gráficos: Integrar a biblioteca MPAndroidChart. Criar um componente na tela de detalhes que plote os preços históricos (Sparkline).
+
+Favoritos: Atualizar o Room para incluir uma tabela/campo de favoritos. Criar o ToggleFavoriteUseCase.
+
+UI: Adicionar um botão de "Coração" (Animated Vector Drawable) que persiste o estado no banco de dados local.
+
+Estratégia: O gráfico deve buscar dados de um novo endpoint da CoinGecko (/market_chart).
+
+Task 3: Background Alarms (WorkManager) e Notificações
+O que implementar:
+
+Worker: Criar um PriceCheckWorker que estenda CoroutineWorker.
+
+Lógica: O Worker deve rodar periodicamente, consultar o preço atual e comparar com um limite definido pelo usuário.
+
+Notificação: Se o limite for atingido, disparar uma Notification usando NotificationChannel (Android 8.0+).
+
+DI: Garantir que o Worker receba as dependências (Repository) via Hilt (HiltWorker).
+
+Task 4: Qualidade e Cobertura (Testes Unitários e Integração)
+O que implementar:
+
+Testes Unitários: Usar JUnit5 + MockK. Testar os UseCases e a ViewModel (usando MainDispatcherRule).
+
+Testes de Flow: Usar a biblioteca Turbine para validar a emissão de estados no StateFlow.
+
+Testes de Integração: Criar testes para o DAO do Room utilizando um banco de dados In-Memory para garantir que as queries de favoritos e busca local funcionem.
+
+PODEMOS COMEÇAR?
+Se entendeu a complexidade e a necessidade de manter o SOLID em cada funcionalidade, confirme e inicie pela TASK 1.

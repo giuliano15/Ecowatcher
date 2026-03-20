@@ -2,6 +2,8 @@ package com.giuldev.ecowatcher.di
 
 import com.giuldev.ecowatcher.domain.usecase.GetMarketAssetsUseCase
 import com.giuldev.ecowatcher.domain.usecase.GetMarketAssetsUseCaseImpl
+import com.giuldev.ecowatcher.domain.usecase.SearchAssetsUseCase
+import com.giuldev.ecowatcher.domain.usecase.SearchAssetsUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,4 +21,9 @@ abstract class UseCaseModule {
     abstract fun bindGetMarketAssetsUseCase(
         impl: GetMarketAssetsUseCaseImpl
     ): GetMarketAssetsUseCase
+
+    @Binds
+    abstract fun bindSearchAssetsUseCase(
+        impl: SearchAssetsUseCaseImpl
+    ): SearchAssetsUseCase
 }

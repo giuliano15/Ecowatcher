@@ -17,19 +17,25 @@ import java.util.Locale
  * Adapter do RecyclerView para a lista de ativos.
  * Usa ListAdapter e DiffUtil para animações fluidas e alta performance na atualização da lista.
  */
-class AssetAdapter : ListAdapter<Asset, AssetAdapter.AssetViewHolder>(AssetDiffCallback()) {
+class AssetAdapter(
+    private val onItemClick: (Asset) -> Unit
+) : ListAdapter<Asset, AssetAdapter.AssetViewHolder>(AssetDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AssetViewHolder {
         val binding = ItemAssetBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AssetViewHolder(binding)
+        return AssetViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(holder: AssetViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class AssetViewHolder(private val binding: ItemAssetBinding) : RecyclerView.ViewHolder(binding.root) {
+    class AssetViewHolder(
+        private val binding: ItemAssetBinding,
+        private val onItemClick: (Asset) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(asset: Asset) {
+            binding.root.setOnClickListener { onItemClick(asset) }
             val currencyFormat = NumberFormat.getCurrencyInstance(Locale.US)
 
             // Carregamento de imagem eficiente com Coil e corte circular
@@ -42,10 +48,11 @@ class AssetAdapter : ListAdapter<Asset, AssetAdapter.AssetViewHolder>(AssetDiffC
             binding.tvAssetSymbol.text = asset.symbol
             binding.tvAssetPrice.text = currencyFormat.format(asset.currentPrice)
 
-            // Lógica visual: Verde para alta, Vermelho para queda
+            // Lógica visual: Verde para alta, Vermelho para queda usando as novas cores do tema
             val isPositive = asset.priceChangePercentage24h >= 0
             val sign = if (isPositive) "+" else ""
-            val color = if (isPositive) Color.parseColor("#4CAF50") else Color.parseColor("#F44336")
+            val colorRes = if (isPositive) com.giuldev.ecowatcher.R.color.price_up else com.giuldev.ecowatcher.R.color.price_down
+            val color = androidx.core.content.ContextCompat.getColor(binding.root.context, colorRes)
 
             binding.tvAssetChange.text = String.format(Locale.getDefault(), "%s%.2f%%", sign, asset.priceChangePercentage24h)
             binding.tvAssetChange.setTextColor(color)

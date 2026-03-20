@@ -16,7 +16,11 @@ fun AssetResponse.toEntity(): AssetEntity {
         name = this.name.orEmpty(),
         imageUrl = this.image.orEmpty(),
         currentPrice = this.currentPrice ?: 0.0,
-        priceChangePercentage24h = this.priceChangePercentage24h ?: 0.0
+        priceChangePercentage24h = this.priceChangePercentage24h ?: 0.0,
+        marketCap = this.marketCap ?: 0.0,
+        totalVolume = this.totalVolume ?: 0.0,
+        high24h = this.high24h ?: 0.0,
+        low24h = this.low24h ?: 0.0
     )
 }
 
@@ -31,7 +35,11 @@ fun AssetEntity.toDomain(): Asset {
         name = this.name,
         imageUrl = this.imageUrl,
         currentPrice = this.currentPrice,
-        priceChangePercentage24h = this.priceChangePercentage24h
+        priceChangePercentage24h = this.priceChangePercentage24h,
+        marketCap = this.marketCap,
+        totalVolume = this.totalVolume,
+        high24h = this.high24h,
+        low24h = this.low24h
     )
 }
 
